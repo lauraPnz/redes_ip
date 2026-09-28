@@ -1,0 +1,4 @@
+protocolo,rotas_kernel,rotas_bird,pacotes,bytes,taxa_Bps,rtt_ms,saltos,queda_s
+bgp,14,19,18,1779,14,8,0.306,2,62,4
+ospf,18,11,67,6992,58,3,0.119,2,0,8
+rip,3,11,8,1024,8,5,0.050,3,67,2
