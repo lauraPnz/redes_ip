@@ -15,7 +15,7 @@ for r in r1 r2 r3 r4 r5; do
     sudo ip netns exec $r ip link set lo up
 done
 
-# Funcao auxiliar para interligar roteadores
+# Funcao auxiliar para interligar roteadores (simula a conexão de um cabo de rede entre dois roteadores)
 connect_p2p() {
     local n1=$1; local if1=$2; local ip1=$3
     local n2=$4; local if2=$5; local ip2=$6
@@ -33,7 +33,7 @@ connect_p2p() {
 
 echo "[3/4] Conectando links ponto-a-ponto entre os roteadores..."
 # AS 100 <-> AS 200
-connect_p2p r1 eth_r2 10.0.12.1/30 r2 eth_r1 10.0.12.2/30
+connect_p2p r1 eth_r2 10.0.12.1/30 r2 eth_r1 10.0.12.2/30 #conectando links do bgp
 connect_p2p r3 eth_r4 10.0.34.1/30 r4 eth_r3 10.0.34.2/30
 
 # Links internos (iBGP/IGP)
@@ -47,7 +47,7 @@ connect_p2p r4 eth_r5 10.0.45.1/30 r5 eth_r4 10.0.45.2/30
 echo "[4/4] Configurando as redes de acesso (LANs)..."
 declare -A lans=( ["r1"]="192.168.10.1/24" ["r2"]="192.168.20.1/24" ["r3"]="192.168.30.1/24" ["r4"]="192.168.40.1/24" ["r5"]="192.168.50.1/24" )
 
-for r in "${!lans[@]}"; do
+for r in "${!lans[@]}"; do #cria uma interface do tipo dummy que atua como interface virtual 
     sudo ip netns exec $r ip link add name lan type dummy
     sudo ip netns exec $r ip addr add ${lans[$r]} dev lan
     sudo ip netns exec $r ip link set lan up
