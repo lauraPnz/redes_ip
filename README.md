@@ -43,7 +43,7 @@ As interconexões diretas entre os roteadores utilizam a gama `10.0.XY.0/30`, on
 3. **RIPv2:** Protocolo Distance-Vector baseado em contagem de saltos.
 
 ## Como Reproduzir os Ambientes e Coletar Métricas
-# pré-requisitos 
+### pré-requisitos 
 ```bash
 sudo apt-get update
 sudo apt-get install -y bird2 tcpdump traceroute python3 python3-matplotlib iproute2
