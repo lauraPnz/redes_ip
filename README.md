@@ -5,14 +5,14 @@ Implementação, configuração e análise comparativa de protocolos de encaminh
 ## 1. Arquitetura da Solução
 
 O ambiente foi desenvolvido sobre o kernel Linux utilizando recursos nativos de virtualização e o daemon de roteamento **BIRD (v2.x)**:
-* **Linux Network Namespaces (`ip netns`):** Cada roteador (R1 a R5) opera dentro de um namespace de rede isolado com as suas próprias tabelas de encaminhamento (FIB), interfaces e pilha TCP/IP independente.
+* **Linux Network Namespaces (`ip netns`):** Cada roteador (R1 a R5) opera dentro de um namespace de rede isolado com as suas próprias tabelas de encaminhamento, interfaces e pilha TCP/IP independente.
 * **Enlaces Virtuais (`veth pairs`):** A comunicação entre os nós é efetuada por pares de interfaces virtuais conectadas ponto a ponto, simulando cabos físicos diretos em memória.
 * **Redes Locais de Clientes (Interfaces `dummy`):** Foram criadas interfaces do tipo `dummy` (`lan`) em cada nó para emular LANs de clientes conectadas aos roteadores. Uma interface `dummy` permanece sempre no estado `UP`, garantindo que os daemons de roteamento anunciem os prefixos sem necessidade de instanciar nós ou máquinas virtuais adicionais.
 * **Sockets de Controle Independentes:** Cada roteador possui um socket Unix dedicado em `/tmp/bird-rX.ctl`, permitindo interações e consultas pontuais via utilitário `birdc`.
 
 ## 2. Topologia Física e Lógica
 
-A rede é composta por 5 roteadores dispostos em malha parcial, garantindo caminhos redundantes e ausência de pontos únicos de falha[cite: 6, 25].
+A rede é composta por 5 roteadores dispostos em malha parcial, garantindo caminhos redundantes e ausência de pontos únicos de falha.
 
 ### Plano de Endereçamento IP
 
@@ -33,7 +33,7 @@ As interconexões diretas entre os roteadores utilizam a gama `10.0.XY.0/30`, on
 * **LAN R5:** `192.168.50.1/24`
 
 ### Organização Lógica dos Protocolos
-* **BGP:** Segmentado em 3 Sistemas Autónomos. **AS 100** (R1 e R3 com iBGP), **AS 200** (R2 e R4 com iBGP) e **AS 300** (R5 com eBGP em direção a R3 e R4).
+* **BGP:** Segmentado em 3 Sistemas Autonomos. **AS 100** (R1 e R3 com iBGP), **AS 200** (R2 e R4 com iBGP) e **AS 300** (R5 com eBGP em direção a R3 e R4).
 * **OSPFv2:** Domínio único na **Área 0 (Backbone)**. As interfaces `veth` operam no modo ponto a ponto com custo fixo e as interfaces `lan` são configuradas como `stub` para anunciar a sub-rede sem enviar pacotes de sinalização.
 * **RIPv2:** Domínio plano trocando atualizações por multicast (`224.0.0.9`, UDP 520) com métrica de saltos.
 
